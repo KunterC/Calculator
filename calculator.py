@@ -1,5 +1,6 @@
 import tkinter as tk
 import re  # Import regex to detect the last number
+
 class Calculator:
     
     def __init__(self):
@@ -76,13 +77,13 @@ class Calculator:
         self.button_squareroot = tk.Button(self.root, text="√x", command=lambda: self.add_to_field("**0.5"), width=5, font=('Arial', 15))
         self.button_squareroot.grid(row=8, column=4)
         
-        # self.button_sin = tk.Button(self.root, text="sin", command=lambda: self.add_to_field("sin("), width=5, font=('Arial', 15))
+        # self.button_sin = tk.Button(self.root, text="sin", command=self.CalculateSin(), width=5, font=('Arial', 15))
         # self.button_sin.grid(row=7, column=1)
         
-        # self.button_cos = tk.Button(self.root, text="cos", command=lambda: self.add_to_field("cos("), width=5, font=('Arial', 15))
+        # self.button_cos = tk.Button(self.root, text="cos", command=self.CalculateCos(), width=5, font=('Arial', 15))
         # self.button_cos.grid(row=7, column=2)
         
-        # self.button_tan = tk.Button(self.root, text="tan", command=lambda: self.add_to_field("tan("), width=5, font=('Arial', 15))
+        # self.button_tan = tk.Button(self.root, text="tan", command=self.CalculateTan(), width=5, font=('Arial', 15))
         # self.button_tan.grid(row=7, column=3)
         
         # self.button_arcsin = tk.Button(self.root, text="arcsin", command=lambda: self.add_to_field("arcsin("), width=5, font=('Arial', 15))
@@ -116,14 +117,31 @@ class Calculator:
                 self.operator = self.operator[: -len(last_number)] + f"({last_number})**2"
                 self.display_text = self.display_text[: -len(last_number)] + f"{last_number}²"
             else:
-                self.operator = f"({self.operator})**2"
-                self.display_text = f"({self.display_text})²"
+                self.operator = f"{self.operator}**2"
+                self.display_text = f"{self.display_text}²"
+                
+        elif char == "(":
+            self.operator += "("
+            self.display_text += "("
+        
+        elif char == ")":
+            self.operator += ")"
+            self.display_text += ")"
         
         else:
             self.operator += str(char) #adds them to string and display if they are normal operators
             self.display_text += str(char)
     
         self.field_text.set(self.display_text) #displays text
+        
+    def CalculateSin(self):
+        pass
+    
+    def CalculateCos(self):
+        pass
+    
+    def CalculateTan(self):
+        pass
 
     def calculate(self):
         try:
