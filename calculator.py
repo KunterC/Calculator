@@ -180,7 +180,7 @@ class Calculator:
     def CalculateArcsin(self):
         try: #change field texts to self.operator
             value = float(eval(self.operator)) #calculate result in operator
-            result = str(math.asin(value)) 
+            result = str(math.degrees(math.asin(value))) 
             self.operator = result
             self.display_text = result 
             self.field_text.set(self.display_text)
@@ -190,7 +190,7 @@ class Calculator:
     def CalculateArccos(self):
         try: #change field texts to self.operator
             value = float(eval(self.operator)) #calculate result in operator
-            result = str(math.acos(value)) 
+            result = str(math.degrees(math.acos(value))) 
             self.operator = result
             self.display_text = result 
             self.field_text.set(self.display_text)
@@ -200,7 +200,7 @@ class Calculator:
     def CalculateArctan(self):
         try: #change field texts to self.operator
             value = float(eval(self.operator)) #calculate result in operator
-            result = str(math.atan(value)) 
+            result = str(math.degrees(math.atan(value))) 
             self.operator = result
             self.display_text = result 
             self.field_text.set(self.display_text)
@@ -210,7 +210,7 @@ class Calculator:
     def CalculateArccot(self):
         try: #change field texts to self.operator
             value = float(eval(self.operator)) #calculate result in operator
-            result = str(math.acot(value)) 
+            result = str(math.degrees(math.acot(value))) 
             self.operator = result
             self.display_text = result 
             self.field_text.set(self.display_text)
