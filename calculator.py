@@ -1,6 +1,6 @@
 import tkinter as tk
 import re  # Import regex to detect the last number
-
+import math
 class Calculator:
     
     def __init__(self):
@@ -74,60 +74,63 @@ class Calculator:
         self.button_square = tk.Button(self.root, text="x²", command=lambda: self.add_to_field("**2"), width=5, font=('Arial', 15))
         self.button_square.grid(row=7, column=4)
         
-        self.button_squareroot = tk.Button(self.root, text="√x", command=lambda: self.add_to_field("**0.5"), width=5, font=('Arial', 15))
+        self.button_squareroot = tk.Button(self.root, text="√", command=lambda: self.add_to_field("**0.5"), width=5, font=('Arial', 15))
         self.button_squareroot.grid(row=8, column=4)
         
-        # self.button_sin = tk.Button(self.root, text="sin", command=self.CalculateSin(), width=5, font=('Arial', 15))
-        # self.button_sin.grid(row=7, column=1)
+        self.button_power = tk.Button(self.root, text="^", command=lambda: self.add_to_field("**"), width=5, font=('Arial', 15))
+        self.button_power.grid(row=9, column=4)
         
-        # self.button_cos = tk.Button(self.root, text="cos", command=self.CalculateCos(), width=5, font=('Arial', 15))
-        # self.button_cos.grid(row=7, column=2)
+        self.button_sin = tk.Button(self.root, text="sin", command=lambda: self.CalculateSin(), width=5, font=('Arial', 15))
+        self.button_sin.grid(row=7, column=1)
         
-        # self.button_tan = tk.Button(self.root, text="tan", command=self.CalculateTan(), width=5, font=('Arial', 15))
-        # self.button_tan.grid(row=7, column=3)
+        self.button_cos = tk.Button(self.root, text="cos", command=lambda: self.CalculateCos(), width=5, font=('Arial', 15))
+        self.button_cos.grid(row=7, column=2)
         
-        # self.button_arcsin = tk.Button(self.root, text="arcsin", command=lambda: self.add_to_field("arcsin("), width=5, font=('Arial', 15))
-        # self.button_arcsin.grid(row=8, column=1)
+        self.button_tan = tk.Button(self.root, text="tan", command=lambda: self.CalculateTan(), width=5, font=('Arial', 15))
+        self.button_tan.grid(row=7, column=3)
         
-        # self.button_arccos = tk.Button(self.root, text="arccos", command=lambda: self.add_to_field("arccos("), width=5, font=('Arial', 15))
-        # self.button_arccos.grid(row=8, column=2)
+        self.button_cot = tk.Button(self.root, text="cot", command=lambda: self.CalculateCot(), width=5, font=('Arial', 15))
+        self.button_cot.grid(row=9, column=1)
         
-        # self.button_arctan = tk.Button(self.root, text="arctan", command=lambda: self.add_to_field("arctan("), width=5, font=('Arial', 15))
-        # self.button_arctan.grid(row=8, column=3)
+        self.button_arccot = tk.Button(self.root, text="cot⁻¹", command=lambda: self.CalculateArccot(), width=5, font=('Arial', 15))
+        self.button_arccot.grid(row=9, column=2)
+        
+        self.button_arcsin = tk.Button(self.root, text="sin⁻¹", command=lambda: self.CalculateArcsin(), width=5, font=('Arial', 15))
+        self.button_arcsin.grid(row=8, column=1)
+        
+        self.button_arccos = tk.Button(self.root, text="cos⁻¹", command=lambda: self.CalculateArccos(), width=5, font=('Arial', 15))
+        self.button_arccos.grid(row=8, column=2)
+        
+        self.button_arctan = tk.Button(self.root, text="tan⁻¹", command=lambda: self.CalculateArctan(), width=5, font=('Arial', 15))
+        self.button_arctan.grid(row=8, column=3)
 
     def add_to_field(self, char):
         if char == "**0.5":
             #uses regex library to look for patterns in self.operator. This is a pattern that looks
-            #for bracketed expressions or the last number if it is called in a bracketed expression.
-            match = re.search(r"(\([^()]*\)|\d+\.?\d*)\s*$", self.operator) #looks for the last number or bracketed expression
-            #if finds a number or bracketed expression, puts the sqrt sign before it
-            if match:
-                last_number = match.group(1) #gets the last number or bracketed expression
-                self.operator = self.operator[: -len(last_number)] + f"({last_number})**0.5" #puts the **0.5 to the end of the last number or brackets
-                self.display_text = self.display_text[: -len(last_number)] + f"√{last_number}" #displays the squareroot sign before the last number or expression
+            #for bracketed expression or the last number if it is called in a bracketed expression.
+            match1 = re.search(r"(\([^()]*\)|\d+\.?\d*)\s*$", self.operator) #looks for the last number or bracketed expression
+            match2 = re.search(r"(\([^()]*\)|\d+\.?\d*)\s*$", self.display_text) #matches the displayed text
+            if match1 or match2:
+                last_number = match1.group(1) #gets the last number or bracketed expression
+                last_display = match2.group(1) #another match for the display
+                self.operator = self.operator[: -len(last_number)] + f"{last_number}**0.5" #puts the **0.5 to the end of the last number or brackets
+                self.display_text = self.display_text[: -len(last_display)] + f"√{last_display}" #displays the squareroot sign before the last number or expression
             else: #displays it normally if no brackets are written
-                self.operator = f"({self.operator})**0.5"
-                self.display_text = f"√({self.display_text})"
+                self.operator = f"{self.operator}**0.5"
+                self.display_text = f"√{self.display_text}"
     
         elif char == "**2":
-            match = re.search(r"(\([^()]*\)|\d+\.?\d*)\s*$", self.operator) #looks for brackets and last number again
-            
-            if match: #if it finds brackets
-                last_number = match.group(1) #groups the brackets
-                self.operator = self.operator[: -len(last_number)] + f"({last_number})**2"
-                self.display_text = self.display_text[: -len(last_number)] + f"{last_number}²"
+            match1 = re.search(r"(\([^()]*\)|\d+\.?\d*)\s*$", self.operator) #looks for brackets and last number again
+            match2 = re.search(r"(\([^()]*\)|\d+\.?\d*)\s*$", self.display_text)
+            if match1 or match2: #if it finds brackets
+                last_number = match1.group(1) #groups the brackets and last num
+                last_display = match2.group(1)
+                self.operator = self.operator[: -len(last_number)] + f"{last_number}**2"
+                self.display_text = self.display_text[: -len(last_display)] + f"{last_display}²"
             else:
                 self.operator = f"{self.operator}**2"
                 self.display_text = f"{self.display_text}²"
-                
-        elif char == "(":
-            self.operator += "("
-            self.display_text += "("
-        
-        elif char == ")":
-            self.operator += ")"
-            self.display_text += ")"
-        
+
         else:
             self.operator += str(char) #adds them to string and display if they are normal operators
             self.display_text += str(char)
@@ -135,13 +138,84 @@ class Calculator:
         self.field_text.set(self.display_text) #displays text
         
     def CalculateSin(self):
-        pass
+        try: #change field texts to self.operator
+            value = float(eval(self.operator)) #calculate result in operator display as sin(x)
+            result = str(math.sin(math.radians(value))) #dont set field text immediately
+            self.operator = result
+            self.display_text = result
+            self.field_text.set(self.display_text)#evaluate when called but dont display it until = is hit
+        except:
+            self.field_text.set("Error")
     
     def CalculateCos(self):
-        pass
+        try: #change field texts to self.operator
+            value = float(eval(self.operator)) #calculate result in operator display as cos(x)
+            result = str(math.cos(math.radians(value))) #dont set field text immediately
+            self.operator = result
+            self.display_text = result
+            self.field_text.set(self.display_text)#evaluate when called but dont display it until = is hit
+        except:
+            self.field_text.set("Error")
     
     def CalculateTan(self):
-        pass
+        try: #change field texts to self.operator
+            value = float(eval(self.operator)) #calculate result in operator
+            result = str(math.tan(math.radians(value))) 
+            self.operator = result
+            self.display_text = result 
+            self.field_text.set(self.display_text)
+        except:
+            self.field_text.set("Error")
+            
+    def CalculateCot(self):
+        try:
+            value = float(eval(self.operator)) #calculate result in operator
+            result = str(1/math.tan(math.radians(value))) 
+            self.operator = result
+            self.display_text = result 
+            self.field_text.set(self.display_text)
+        except:
+            self.field_text.set("Error")   
+            
+    def CalculateArcsin(self):
+        try: #change field texts to self.operator
+            value = float(eval(self.operator)) #calculate result in operator
+            result = str(math.asin(value)) 
+            self.operator = result
+            self.display_text = result 
+            self.field_text.set(self.display_text)
+        except:
+            self.field_text.set("Error")
+    
+    def CalculateArccos(self):
+        try: #change field texts to self.operator
+            value = float(eval(self.operator)) #calculate result in operator
+            result = str(math.acos(value)) 
+            self.operator = result
+            self.display_text = result 
+            self.field_text.set(self.display_text)
+        except:
+            self.field_text.set("Error")
+    
+    def CalculateArctan(self):
+        try: #change field texts to self.operator
+            value = float(eval(self.operator)) #calculate result in operator
+            result = str(math.atan(value)) 
+            self.operator = result
+            self.display_text = result 
+            self.field_text.set(self.display_text)
+        except:
+            self.field_text.set("Error")
+            
+    def CalculateArccot(self):
+        try: #change field texts to self.operator
+            value = float(eval(self.operator)) #calculate result in operator
+            result = str(math.acot(value)) 
+            self.operator = result
+            self.display_text = result 
+            self.field_text.set(self.display_text)
+        except:
+            self.field_text.set("Error")
 
     def calculate(self):
         try:
