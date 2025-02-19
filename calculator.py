@@ -1,15 +1,18 @@
-import tkinter as tk
-import math
+import tkinter as tk #imports tkinter for the GUI
+import math #imports math for calculations
+
 class Calculator:
     
     def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Calculator App")
-        self.root.geometry("400x400")
+        self.root = tk.Tk() #creates a window
+        self.root.title("Calculator App") #title for the app
+        self.root.geometry("400x400") #size of the app
+        self.root.resizable(width=False, height=False) #cant resize the app
         self.operator = "" #does the inner calculation
         self.field_text = tk.StringVar() #string variable in entry box
         self.display_text = "" #displays differently to the user
 
+        #Defined all buttons manuallt and an entry field where the calculation goes
         self.entry = tk.Entry(self.root, textvariable=self.field_text, width=30, font=("Arial", 16), borderwidth=5, relief="ridge")
         self.entry.grid(row=1, column=1, columnspan=4)
         
@@ -82,6 +85,7 @@ class Calculator:
         self.button_power = tk.Button(self.root, text="^", command=lambda: self.add_to_field("**"), width=5, bg="#90EE90", font=('Arial', 15))
         self.button_power.grid(row=9, column=4)
         
+        #Buttons that take their own functions as commands for calculation besides = and clear
         self.button_sin = tk.Button(self.root, text="sin", command=lambda: self.CalculateSin(), width=5, bg="light blue", font=('Arial', 15))
         self.button_sin.grid(row=7, column=1)
         
@@ -109,7 +113,7 @@ class Calculator:
         self.button_factorial = tk.Button(self.root, text="!", command=lambda: self.CalculateFactorial(), width=5, bg="light blue", font=('Arial', 15))
         self.button_factorial.grid(row=9, column=3)
 
-    def add_to_field(self, char):
+    def add_to_field(self, char): #function that adds the input characters to the entry field
         if not hasattr(self, "sqrt_stack"):
             self.sqrt_stack = []  #create list for square roots to keep track of if we're in a squareroot or not
         
@@ -131,15 +135,15 @@ class Calculator:
             self.operator += ")"#adds it normally
             if self.sqrt_stack:  #checks if we're inside a square root
                 self.operator += "**(1/2)"  #if we are, it adds **(1/2) to the end of the expression we want to squareroot
-                self.sqrt_stack.pop() #pops the true out of the list. If nested, keeps adding and popping until no True statements left
+                self.sqrt_stack.pop() #pops the true out of the list. If nested expression, keeps adding and popping until no True statements left
             
             if self.thrdroot_stack:  #checks if we're inside a third root
                 self.operator += "**(1/3)"  #adds the third root to the end of bracketed expression
                 self.thrdroot_stack.pop() #removes the corresponding true value
                 
-        elif char == "**2":
-            self.operator += "**2"
-            self.display_text += "²"
+        elif char == "**2": #if character is squared
+            self.operator += "**2" #adds to operator normally
+            self.display_text += "²" #displays the superscript 2
 
         else:
             self.operator += str(char) #adds them to string and display if they are normal operators
@@ -148,101 +152,101 @@ class Calculator:
         self.field_text.set(self.display_text) #displays text
         
     def CalculateSin(self):
-        try: #change field texts to self.operator
-            value = float(eval(self.operator)) #calculate result in operator 
-            result = str(math.sin(math.radians(value))) #calculate sin in radians
-            self.operator = result
-            self.display_text = result
-            self.field_text.set(self.display_text)
+        try: 
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
+            result = str(math.sin(math.radians(value))) #calculate sin
+            self.operator = result #set operator to result
+            self.display_text = result #set display text to result
+            self.field_text.set(self.display_text) #display the result
         except:
-            self.field_text.set("Error")
+            self.field_text.set("Error") #show error if cant calculate
     
     def CalculateCos(self):
         try: #change field texts to self.operator
-            value = float(eval(self.operator)) #calculate result in operator
-            result = str(math.cos(math.radians(value))) #calculate cos in radians
-            self.operator = result
-            self.display_text = result
-            self.field_text.set(self.display_text)#evaluate when called but dont display it until = is hit
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
+            result = str(math.cos(math.radians(value))) #calculate cos
+            self.operator = result #set operator to result
+            self.display_text = result #set display text to result
+            self.field_text.set(self.display_text) #display the result
         except:
             self.field_text.set("Error")
     
     def CalculateTan(self):
         try: #change field texts to self.operator
-            value = float(eval(self.operator)) #calculate result in operator
-            result = str(math.tan(math.radians(value))) #calculate tan in radians
-            self.operator = result
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
+            result = str(math.tan(math.radians(value))) #calculate tan 
+            self.operator = result  #set all to result and display it
             self.display_text = result 
             self.field_text.set(self.display_text)
         except:
-            self.field_text.set("Error")
+            self.field_text.set("Error") #show error if fails
             
     def CalculateCot(self):
         try:
-            value = float(eval(self.operator)) #calculate result in operator
-            result = str(1/math.tan(math.radians(value))) #get the reciprocal of the tan value in radians
-            self.operator = result
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
+            result = str(1/math.tan(math.radians(value))) #get the reciprocal of the tan value 
+            self.operator = result #set all to result and display it
             self.display_text = result 
             self.field_text.set(self.display_text)
         except:
-            self.field_text.set("Error")   
+            self.field_text.set("Error") #show error if fails
             
     def CalculateArcsin(self):
-        try: #change field texts to self.operator
-            value = float(eval(self.operator)) #calculate result in operator
+        try: 
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
             result = str(math.degrees(math.asin(value))) #calculate arcsin of entered input
-            self.operator = result
+            self.operator = result #set all to result and display it
             self.display_text = result 
             self.field_text.set(self.display_text)
         except:
-            self.field_text.set("Error")
+            self.field_text.set("Error") #show error if fails
     
     def CalculateArccos(self):
-        try: #change field texts to self.operator
-            value = float(eval(self.operator)) #calculate result in operator
+        try: 
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
             result = str(math.degrees(math.acos(value))) #calculate arccos of entered input in degrees
-            self.operator = result
+            self.operator = result #set all to result and display it
             self.display_text = result 
             self.field_text.set(self.display_text)
         except:
-            self.field_text.set("Error")
+            self.field_text.set("Error") #show error if fails
     
     def CalculateArctan(self):
-        try: #change field texts to self.operator
-            value = float(eval(self.operator)) #calculate result in operator
+        try:
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
             result = str(math.degrees(math.atan(value))) #calculate arctan of entered input in degrees
-            self.operator = result
+            self.operator = result #set all to result and display it
             self.display_text = result 
             self.field_text.set(self.display_text)
         except:
-            self.field_text.set("Error")
+            self.field_text.set("Error") #show error if fails
             
     def CalculateArccot(self):
-        try: #change field texts to self.operator
-            value = float(eval(self.operator)) #calculate result in operator
-            result = str(math.degrees(math.atan(1/value))) #calculate arctan of reciprocal value in degrees
-            self.operator = result
+        try: 
+            value = float(eval(self.operator)) #calculate the result of input expression in operator 
+            result = str(math.degrees(math.atan(1/value))) #calculate arctan of the reciprocal of the value in degrees
+            self.operator = result #set all to result and display it
             self.display_text = result 
             self.field_text.set(self.display_text)
         except:
-            self.field_text.set("Error")
+            self.field_text.set("Error") #show error if fails
             
     def CalculateFactorial(self):
-        try: #change field texts to self.operator
-            value = int(eval(self.operator)) #calculate result in operator
-            result = str(math.factorial(value)) #calculate arctan of reciprocal value in degrees
-            self.operator = result
+        try:
+            value = int(eval(self.operator)) #calculate the result of input expression in operator, use int because function does not work with floats
+            result = str(math.factorial(value))#get the factorial of the input expression
+            self.operator = result #set all to result and display it
             self.display_text = result 
             self.field_text.set(self.display_text)
         except:
-            self.field_text.set("Error")
+            self.field_text.set("Error") #show error if fails
 
     def calculate(self):
         try:
-            temp = str(eval(self.operator))  #evaluates the final string
-            self.field_text.set(temp)  
-            self.operator = temp  
-            self.display_text = temp  #sets everything to the result
+            result = str(eval(self.operator))  #evaluates the entered expression
+            self.operator = result  
+            self.display_text = result  #sets everything to the result and displays it
+            self.field_text.set(self.display_text)
         except Exception:
             self.field_text.set("Error") #displays error if evaluation fails
             self.operator = ""
@@ -254,4 +258,4 @@ class Calculator:
         self.field_text.set(self.display_text)
 
 app = Calculator()
-app.root.mainloop()
+app.root.mainloop() #runs the app
